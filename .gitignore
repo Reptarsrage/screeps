@@ -1,9 +1,3 @@
-# yarn lock file
-/yarn.lock
-
-# npm lock file (v5.0.0+)
-/package-lock.json
-
 # Ignore basic folders
 /dist
 /.rpt2_cache
@@ -13,9 +7,6 @@
 
 # TypeScript definitions installed by Typings
 /typings
-
-# Screeps Config
-screeps.json
 
 # Numerous always-ignore extensions
 *.diff

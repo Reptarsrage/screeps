@@ -1,18 +1,28 @@
 {
   "compilerOptions": {
-    "module": "es2015",
-    "target": "es5",
-    "moduleResolution": "Node",
-    "outDir": "dist",
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
     "baseUrl": "src/",
+    "declaration": false,
+    "experimentalDecorators": true,
+    "lib": ["es6", "es7", "dom"],
+    "module": "es6",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "outDir": "dist",
+    "plugins": [{ "name": "tslint-language-service" }],
+    "pretty": true,
+    "removeComments": true,
+    "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "experimentalDecorators": true,
-    "noImplicitReturns": true,
-    "allowSyntheticDefaultImports": true,
-    "allowUnreachableCode": false
+    "target": "es5"
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist"
   ]
 }

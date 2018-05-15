@@ -1,20 +1,14 @@
 {
   "extends" : [
-    "tslint:recommended"
+    "tslint-config-airbnb",
+    "tslint-eslint-rules",
+    "tslint-config-prettier"
   ],
+  "rulesDirectory": ["tslint-plugin-prettier"],
   "rules": {
-    "forin": false,
-    "interface-name": [true, "never-prefix"],
-    "member-ordering": [false],
-    "no-console": [false],
-    "no-namespace": [true, "allow-declarations"],
-    "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
-    "variable-name": [
-      true,
-      "ban-keywords",
-      "check-format",
-      "allow-pascal-case",
-      "allow-leading-underscore"
-    ]
+    "strict-boolean-expressions": [true, "allow-undefined-union"],
+    "import-name": false,
+    "variable-name": false,
+    "prettier": true
   }
 }
