@@ -1,26 +1,28 @@
 /* Workaround until the following PR is merged
  * https://github.com/langri-sha/screeps-webpack-plugin/pull/38
  */
-const debug = require('debug')('screeps-webpack-plugin')
-const path = require('path')
-const fs = require('fs')
-const { SyncHook, SyncWaterfallHook, AsyncSeriesWaterfallHook } = require('tapable')
-const ScreepsModules = require('screeps-modules')
+const debug = require('debug')('screeps-webpack-plugin');
+const path = require('path');
+const fs = require('fs');
+const chalk = require('chalk');
+const { SyncHook, SyncWaterfallHook, AsyncSeriesWaterfallHook } = require('tapable');
+const ScreepsModules = require('screeps-modules');
 
+const log = console.log;
 const config = require("./screeps.config.json");
 
 // Events.
-const COLLECT_MODULES = 'screeps-webpack-plugin-collect-modules'
-const CONFIG_CLIENT = 'screeps-webpack-plugin-configure-client'
-const BEFORE_COMMIT = 'screeps-webpack-plugin-before-commit'
-const AFTER_COMMIT = 'screeps-webpack-plugin-after-commit'
+const COLLECT_MODULES = 'screeps-webpack-plugin-collect-modules';
+const CONFIG_CLIENT = 'screeps-webpack-plugin-configure-client';
+const BEFORE_COMMIT = 'screeps-webpack-plugin-before-commit';
+const AFTER_COMMIT = 'screeps-webpack-plugin-after-commit';
 
-const pluginName = 'ScreepsWebpackPlugin'
+const pluginName = 'ScreepsWebpackPlugin';
 
 class ScreepsWebpackPluginError extends Error {
   constructor (msg) {
-    super(msg)
-    this.name = 'ScreepsWebpackPluginError'
+    super(msg);
+    this.name = 'ScreepsWebpackPluginError';
   }
 }
 
@@ -46,10 +48,11 @@ class ScreepsWebpackPlugin {
 
             compilation.hooks[COLLECT_MODULES].callAsync(initial, (err, obj) => {
               if (err) {
+                log(chalk.red('Error while collecting modules'))
                 debug('Error while collecting modules', err.stack)
-
                 return reject(err)
               } else {
+                log(`Started ${chalk.magenta('uploading')} files...`);
                 resolve(obj.modules)
               }
             })
@@ -63,6 +66,7 @@ class ScreepsWebpackPlugin {
 
         return client.commit(branch, modules)
           .then((body) => {
+            log(`Finished ${chalk.blue('uploading')} files`);
             compilation.hooks[AFTER_COMMIT].call(body)
           })
           .catch((body) => {
@@ -93,6 +97,8 @@ class ScreepsWebpackPlugin {
     const outputPath = compilation.options.output.path
     const files = []
 
+    log(`\nStarted ${chalk.blue('collecting')} files...`);
+
     for (const chunk of chunks) {
       for (const file of chunk.files) {
         files.push(path.resolve(outputPath, file))
@@ -122,6 +128,7 @@ class ScreepsWebpackPlugin {
 
     Promise.all(promises)
       .then((files) => {
+        log(`Finished ${chalk.blue('collecting')} ${chalk.magenta(files.length)} files...`);
         const modules = files.reduce((modules, file) => {
           Object.assign(modules, file)
 
@@ -130,10 +137,14 @@ class ScreepsWebpackPlugin {
 
         cb(null, {modules, plugin, compilation})
       })
-      .catch((err) => cb(err, {modules: null}))
+      .catch((err) => {
+        log(chalk.red('Error while collecting files.'));
+        cb(err, {modules: null});
+      })
   }
 
   configureClient (initial, plugin) {
+    log(`Using username ${chalk.magenta(plugin.options.email)}...`);
     return new ScreepsModules(plugin.options)
   }
 }

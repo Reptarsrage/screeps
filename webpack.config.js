@@ -38,7 +38,8 @@ module.exports = (env) => {
     },
     output: {
       path: outPath,
-      filename: 'main.js'
+      filename: 'main.js',
+      libraryTarget: 'commonjs2'
     },
     plugins: [
       new CleanWebpackPlugin([outPath]),
